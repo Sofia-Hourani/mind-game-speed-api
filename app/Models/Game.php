@@ -11,4 +11,8 @@ class Game extends Model
     protected $fillable = [
         'player_name','level'
     ];
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
 }

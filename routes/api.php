@@ -20,8 +20,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('game/{id}/submit', [GameController::class, 'submitGame']) ->where('id', '.*')
+Route::post('game/{id}/submit', [GameController::class, 'submitGame'])
     ->name('game.submit');
 
 Route::post('game/start', [GameController::class, 'startGame'])->name('game.start');
 
+Route::get('game/{id}/end', [GameController::class, 'endGame'])
+    ->name('game.end');
