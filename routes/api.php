@@ -19,4 +19,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+
+Route::post('game/{id}/submit', [GameController::class, 'submitGame']) ->where('id', '.*')
+    ->name('game.submit');
+
 Route::post('game/start', [GameController::class, 'startGame'])->name('game.start');
+

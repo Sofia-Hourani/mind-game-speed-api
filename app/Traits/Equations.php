@@ -13,7 +13,7 @@ trait Equations{
                 for ($i = 1; $i < $numCount; $i++) {
                     $op = $operations[array_rand($operations)];
                     $num = rand(1, 9);
-                    $equation .= $op . $num;
+                    $equation .= " $op $num ";
                 }
                 break;
             case 2:
@@ -23,7 +23,7 @@ trait Equations{
                 for ($i = 1; $i < $numCount; $i++) {
                     $op = $operations[array_rand($operations)];
                     $num = rand(11, 99);
-                    $equation .= $op . $num;
+                    $equation .= " $op $num ";
                 }
                 break;
             case 3:
@@ -33,7 +33,7 @@ trait Equations{
                 for ($i = 1; $i < $numCount; $i++) {
                     $op = $operations[array_rand($operations)];
                     $num = rand(100, 999);
-                    $equation .= $op . $num;
+                    $equation .= " $op $num ";
                 }
                 break;
             case 4:
@@ -43,7 +43,7 @@ trait Equations{
                 for ($i = 1; $i < $numCount; $i++) {
                     $op = $operations[array_rand($operations)];
                     $num = rand(1000, 9999);
-                    $equation .= $op . $num;
+                    $equation .= " $op $num ";
                 }
                 break;
         }
