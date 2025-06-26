@@ -6,7 +6,6 @@ use App\Models\Game;
 use App\Models\Question;
 use App\Traits\Equations;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
@@ -43,7 +42,6 @@ class GameController extends Controller
     }
     public function submitGame($game_id )
     {
-
         $validated = \request()->validate([
             'answer' => 'required|numeric',
         ]);
@@ -58,6 +56,7 @@ class GameController extends Controller
         $question->update([
             'is_correct'=>$is_correct,
             'answered_at'=>now(),
+            'your_result'=>$validated['answer'],
         ]);
 
         $time_in_second = Carbon::createFromFormat('H:i:s', $question->asked_at)
@@ -66,7 +65,7 @@ class GameController extends Controller
         $nextData = $this->generateEquation($question->game->level);
         $next = $question->create([
             'question' => $nextData,
-             'game_id' => $game_id,
+            'game_id' => $game_id,
             'answer' => eval('return '.$nextData.';'),
             'asked_at' => now(),
         ]);
@@ -75,6 +74,7 @@ class GameController extends Controller
         $correct = Question::where('is_correct', true)->count();
         $question->update([
             'score' => $correct/$total,
+            'time_taken'=>$time_in_second
         ]);
         return response()->json([
             'message'=>$message,
@@ -88,8 +88,49 @@ class GameController extends Controller
             'end_game'=>route('game.end',$game_id),
         ]);
     }
-    public function endGame()
+    public function endGame($game_id )
     {
-
+        $questions=Question::all();
+        $player_name=Question::findOrFail($game_id)->game->player_name;
+        $level=Question::findOrFail($game_id)->game->level;
+        $history=[];
+        $all_questions=[];
+        $all_answer=[];
+        $all_time_taken=[];
+        $best_score=[];
+        foreach($questions as $question){
+            if($question->is_correct==true && !empty(($question->time_taken))){
+                $best_score[]=["spend time"=>[$question->time_taken],
+                   "data"=> ["Question: ".$question->question." Answer:" .$question->answer ." Score:" .$question->score  ]] ;
+            }
+            $all_questions[]=$question->question;
+            $all_answer[]=$question->answer;
+            $all_time_taken[]=$question->time_taken;
+            $history[]="Question #{$question->id}  ".$question->question." Correct Answer ".$question->answer ." Your Answer ".$question->your_result." spend time ".$question->time_taken;
+        }
+        $min_time = null;
+        $score = [];
+        foreach ($best_score as $entry) {
+            $time = (int) $entry['spend time'][0];
+            if (is_null($min_time) || $time < $min_time) {
+                $min_time = $time;
+                $score = [$entry];
+            }
+        }
+        return response()->json([
+            'player_name'=>$player_name,
+            'level'=>$level,
+            'total_time'=>$question->sum('time_taken'),
+            'best_score'=>[
+                'best_score'=>$score,
+                'all_correct_score'=>$best_score
+            ],
+            'history'=>[
+                'history'=>$history,
+                'question'=>$all_questions,
+                'answer'=>$all_answer,
+                'response time'=>$all_time_taken,
+            ]
+        ]);
     }
 }

@@ -16,12 +16,12 @@ return new class extends Migration
             $table->foreignId('game_id');
             $table->string('question');
             $table->float('answer');
+            $table->float('your_result')->nullable();
             $table->time('asked_at')->nullable();
             $table->time('answered_at')->nullable();
-            $table->time('time_taken')->nullable();
+            $table->string('time_taken')->nullable();
             $table->boolean('is_correct')->nullable();
             $table->string('score')->nullable();
-
             $table->timestamps();
         });
     }
