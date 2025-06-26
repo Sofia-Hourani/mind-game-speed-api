@@ -69,3 +69,8 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 ### Postman Collection 
 
 To test the API endpoints, use the provided Postman collection: [game.postman_collection.json]
+
+
+### Instructions for the game
+I built a Game Controller API with three stages: start, submit, and end.
+I created two tables—one for games and one for questions with different levels
